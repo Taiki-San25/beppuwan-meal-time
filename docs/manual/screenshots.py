@@ -1,4 +1,4 @@
-"""操作説明書用の画面写真を撮る(seed_demo.py でデモデータを入れたローカル環境 http://localhost:8010 が対象)"""
+"""操作説明書用の画面写真を撮る(seed_demo.py でデモデータを入れたローカル環境 http://localhost:8020 が対象)"""
 import asyncio
 import datetime
 import sys
@@ -6,7 +6,7 @@ from pathlib import Path
 
 from cdp import Browser
 
-BASE = "http://localhost:8010"
+BASE = "http://localhost:8020"
 HERE = Path(__file__).parent
 IMG = HERE / "img"
 IMG.mkdir(exist_ok=True)

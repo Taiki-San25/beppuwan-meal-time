@@ -1,6 +1,6 @@
 """操作説明書の画面写真用に、ローカルの空のDBへ架空のデモデータを入れる(本番では使わない)
 
-使い方: local.db を退避して空の状態でサーバーを起動し(http://localhost:8010)、このスクリプトを実行する。
+使い方: local.db を退避して空の状態でサーバーを起動し(http://localhost:8020)、このスクリプトを実行する。
 お客様名などはすべて架空。
 """
 import base64
@@ -9,7 +9,7 @@ import http.cookiejar
 import json
 import urllib.request
 
-BASE = "http://localhost:8010"
+BASE = "http://localhost:8020"
 TODAY = datetime.date.today()
 D = TODAY.isoformat()
 

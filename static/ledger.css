@@ -1,0 +1,193 @@
+/* ledger.css — 喫食時間管理表 */
+/* 表示中の日付による背景色(過去=グレー、未来=ブルー、今日=白) */
+body{transition:background-color .2s}
+body.dayPast{background:rgba(233,233,233,.5)}
+body.dayFuture{background:rgba(227,238,250,.5)}
+@media print{body.dayPast,body.dayFuture{background:#fff}}
+.ledgerBar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ledgerBar .dateNav{display:flex;align-items:center;gap:4px}
+.ledgerBar #ldDate{width:150px}
+.ledgerBar #ldSearch{width:220px;flex:0 1 220px}
+.ledgerBar .barRight{display:flex;gap:8px;margin-left:auto}
+.dow{font-size:13px;color:#555;min-width:2.5em}
+.dow.sun{color:#c0392b}
+.dow.sat{color:var(--accent)}
+
+.summary{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.summary .sumCard{flex:1 0 108px;max-width:150px}
+.sumCard{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff}
+.sumCard .sumLabel{font-size:12px;color:#555;font-weight:500}
+.sumCard .sumMain{font-size:13px;margin-top:2px}
+.sumCard .sumMain b{font-size:20px;font-variant-numeric:tabular-nums}
+.sumCard .sumMain span{color:#777;font-size:12px;margin-left:4px}
+.sumCard .sumSub{font-size:11px;color:#888}
+.sumCard.zero{opacity:.55}
+.sumCard.unset{border-color:#f0c36d;background:#fff9ec}
+.sumCard.total{border-color:#b8d4ef;background:var(--accent-bg)}
+.sumCard.total .sumLabel{color:var(--accent)}
+
+.ledgerTable th.sortable{padding:0}
+.ledgerTable th.sortable button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:3px;width:100%;
+  padding:7px 10px;cursor:pointer;white-space:nowrap}
+.ledgerTable th.num.sortable button{justify-content:flex-end}
+.ledgerTable th.sortable button:hover{background:#f0f4f9}
+.ledgerTable th.sortable button:focus-visible{outline:2px solid #b5d4f4;outline-offset:-2px}
+.ledgerTable th.sortable i{font-size:13px;color:#ccc}
+.ledgerTable th.sorted{color:var(--accent)}
+.ledgerTable th.sorted i{color:var(--accent)}
+.ledgerTable tbody tr{cursor:pointer}
+@keyframes rowFlash{0%,60%{background:#fff3b0}100%{background:transparent}}
+.ledgerTable tbody tr.flash td{animation:rowFlash 2.6s ease-out}
+.ledgerTable tbody tr:hover td{background:#f7fbff}
+.ledgerTable tbody tr.slotBreak td{border-top:2px solid #cfdcea}
+.ledgerTable tbody tr.noSlot td:first-child{background:#fff9ec}
+.ledgerTable td.status{white-space:nowrap}
+.entChk{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#555;cursor:pointer;
+  padding:3px 8px 3px 6px;border:1px solid #ddd;border-radius:6px;background:#fff}
+.entChk input{width:16px;height:16px;margin:0;accent-color:#2e7d32;cursor:pointer}
+.entChk:has(input:checked){background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32;font-weight:500}
+.entBadge{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:500;color:#2e7d32;
+  background:#e8f5e9;border-radius:6px;padding:2px 8px}
+.entBadge i{font-size:13px}
+.ledgerTable tbody tr.deleted .entBadge{background:#e6e6e6;color:#999}
+.ledgerTable td.room{font-weight:700;white-space:nowrap}
+.ledgerTable td.resvNo{white-space:nowrap;color:#555;font-variant-numeric:tabular-nums}
+.ledgerTable td.tblNo{white-space:nowrap;font-weight:700}
+.ledgerTable td.tblNo{color:#185fa5}
+.ledgerTable td.tblNo small{font-weight:400;color:#777;font-size:11px}
+.ledgerTable td{white-space:nowrap}
+.ledgerTable td.empty{white-space:normal}
+.ledgerTable td.note,.ledgerTable td.allergyCell{white-space:pre-wrap;min-width:160px}
+.formDate{margin:0;font-size:15px;font-weight:500;display:flex;align-items:center;gap:6px}
+.formDate i{color:var(--accent);font-size:18px}
+.formDate .muted{font-size:12px;font-weight:400}
+.ledgerTable tbody tr.deleted .grpTag{background:#e6e6e6;color:#999}
+.groupBox{border-top:1px solid #eee;padding-top:10px;display:grid;gap:8px}
+.groupPick{display:grid;gap:4px;padding-left:22px}
+.groupNote{margin:0;font-size:12px}
+.ledgerTable td.upd{color:#888;font-size:12px;white-space:nowrap}
+.ledgerTable .slotSel{width:84px;height:30px;padding:0 6px;font-size:13px}
+.allergy{display:inline-flex;gap:4px;color:#c0392b;font-weight:500;white-space:pre-wrap}
+.allergy i{font-size:14px;margin-top:2px}
+.printOnly,.printTitle{display:none}
+.delToggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;white-space:nowrap}
+
+/* 削除済み(グレーアウト) */
+.ledgerTable tbody tr.deleted td{color:#aaa;background:#f6f6f6}
+.ledgerTable tbody tr.deleted td.room{text-decoration:line-through}
+.ledgerTable tbody tr.deleted .allergy{color:#bbb}
+.ledgerTable tbody tr.deleted:hover td{background:#efefef}
+/* 大人0人の行: 赤字＋ピンク(透過93%)。入力漏れに気づけるように */
+.ledgerTable tbody tr.noAdult td{color:#c0392b;background:rgba(255,105,180,.07)}
+.ledgerTable tbody tr.noAdult:hover td{background:rgba(255,105,180,.12)}
+.ledgerTable tbody tr.noAdult select{color:#c0392b}
+.delBadge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:#ddd;color:#666}
+
+/* 記録・変更履歴 */
+.audit{margin-top:14px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#555;display:grid;gap:2px}
+.audit span{display:inline-block;width:5.5em;color:#999}
+.history{margin-top:8px;font-size:12px}
+.history summary{cursor:pointer;color:var(--accent);padding:4px 0}
+.historyList{max-height:260px;overflow-y:auto;border:1px solid #eee;border-radius:6px;padding:4px 10px;margin-top:4px}
+.hItem{padding:6px 0;border-bottom:1px solid #f0f0f0}
+.hItem:last-child{border-bottom:none}
+.hHead{color:#555}
+.hAct{display:inline-block;min-width:3.2em;margin-right:6px;padding:0 6px;border-radius:4px;text-align:center;
+  background:var(--accent-bg);color:var(--accent);font-weight:500}
+.hi-create .hAct{background:#e8f5e9;color:#2e7d32}
+.hi-delete .hAct{background:#fdecea;color:#c0392b}
+.hi-restore .hAct{background:#fff4e0;color:#b26a00}
+.hItem ul{margin:3px 0 0;padding-left:1.4em;color:#333;white-space:pre-wrap;word-break:break-word}
+
+/* 削除済み詳細(閲覧のみ) */
+.readonly{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 16px}
+.roItem span{display:block;font-size:12px;color:#888}
+.roItem div{font-size:14px;white-space:pre-wrap;word-break:break-word}
+
+@media (max-width:640px){
+  .ledgerBar .dateNav{width:100%}
+  .ledgerBar #ldDate{flex:1;width:auto}
+  .ledgerBar #ldSearch{flex:1 1 140px;width:auto}
+  .ledgerBar .barRight{margin-left:0}
+  .ledgerBar [data-act=print]{display:none}
+  .summary .sumCard{flex-basis:92px}
+}
+
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  .printTitle{display:block;font-size:16px;margin:0 0 8px}
+  .printOnly{display:inline;font-weight:700}
+  .ledgerTable .slotSel{display:none}
+  .entChk{border:none;padding:0;background:none}
+  .entChk input{display:none}
+  .entChk:not(:has(input:checked)){visibility:hidden}
+  .ledgerTable th.sortable i{display:none}
+  .grpTag{border:1px solid currentColor}
+  .ledgerTable th.sortable button{padding:4px 6px}
+  .ledgerTable tbody tr.deleted{display:none}
+  .ledgerTable tbody tr:hover td{background:none}
+  .ledgerTable tbody tr.noSlot td:first-child{background:none}
+  .summary{gap:4px}
+  .summary .sumCard{flex:1 0 70px}
+  .sumCard{padding:4px 6px}
+  .sumCard .sumMain b{font-size:15px}
+  table.grid{font-size:11px}
+  table.grid th,table.grid td{padding:4px 6px}
+  table.grid tr{break-inside:avoid}
+}
+.multiRoom{cursor:help;white-space:nowrap}
+.multiRoom small{font-weight:400;color:#777;font-size:11px}
+/* 2泊目以降の泊数バッジ */
+.stayBadge{display:inline-block;padding:1px 8px;border-radius:6px;background:#faeeda;color:#633806;border:1px solid #ef9f27;font-weight:700}
+.ledgerTable tbody tr.deleted .stayBadge{background:#e6e6e6;color:#999;border-color:#ccc}
+@media print{.stayBadge{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+/* 時間枠の追加・削除 */
+.slotChips{display:flex;flex-wrap:wrap;gap:6px;min-height:30px;margin-bottom:10px}
+.slotChip{display:inline-flex;align-items:center;gap:2px;padding:0 4px 0 10px;height:28px;border-radius:999px;
+  background:#e6f1fb;color:#185fa5;font-size:13px;font-variant-numeric:tabular-nums}
+.slotChip button{border:none;background:transparent;color:inherit;cursor:pointer;padding:0 4px;display:flex}
+.slotChip.fixed{padding-right:10px}
+.slotChip.fixed i{font-size:13px;margin-left:4px;opacity:.7}
+.slotAdd{display:flex;gap:6px}
+.slotAdd input{width:130px;flex:none}
+/* 人数の直接入力 */
+.ledgerTable td.cnt{cursor:text}
+.ledgerTable td.cnt:hover{box-shadow:inset 0 -2px 0 #85b7eb}
+.ledgerTable td.cnt .cntInput{width:56px;height:28px;padding:0 4px;text-align:right;font:inherit}
+@media print{.ledgerTable td.cnt:hover{box-shadow:none}}
+/* 時間枠カードで絞り込み */
+.summary .sumCard{cursor:pointer;transition:box-shadow .15s}
+.summary .sumCard:hover{box-shadow:0 0 0 2px #b5d4f4}
+.summary .sumCard:focus-visible{outline:none;box-shadow:0 0 0 2px #185fa5}
+.summary .sumCard.on{box-shadow:0 0 0 2px #185fa5;opacity:1}
+body.slotFiltered .summary .sumCard:not(.on):not(.total){opacity:.45}
+.filterNote{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-4px 0 10px;padding:6px 10px;font-size:13px;
+  color:#0c447c;background:#e6f1fb;border:1px solid #b5d4f4;border-radius:8px}
+.filterNote[hidden]{display:none}
+.filterNote .btn{height:28px;padding:0 10px;font-size:12px;margin-left:auto}
+@media print{body.slotFiltered .summary .sumCard:not(.on):not(.total){display:none}}
+/* 時間枠カードの入場バー(入場済みの組数/組数)。全員入場で背景を緑 */
+.sumCard .entBar{display:flex;height:5px;background:#eceff1;border-radius:3px;margin-top:6px;overflow:hidden}
+.sumCard .entBar i{display:block;height:100%;background:#43a047;transition:width .3s}
+.sumCard .entBar i.part{background:#ef9f27}
+.sumCard .entTxt{font-size:11px;color:#2e7d32;margin-top:2px}
+.sumCard.zero .entTxt{color:#999}
+.sumCard.allIn,.sumCard.total.allIn,.sumCard.unset.allIn{background:#dff0df;border-color:#2e7d32}
+.sumCard.allIn .sumLabel{color:#1b5e20}
+.sumCard .allInMark{font-size:11px;font-weight:700;color:#1b5e20}
+@media print{.sumCard .entBar i,.sumCard.allIn{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media print{.summary .sumCard.on{box-shadow:none}}
+.sumCard .entPartTxt{color:#a55a00;margin-left:2px}
+/* 朝食の入場人数(＋−) */
+.entStep{display:inline-flex;align-items:center;gap:2px;border:1px solid #ccc;border-radius:6px;background:#fff;padding:1px}
+.entStep button{width:24px;height:24px;border:none;background:#f3f4f6;border-radius:4px;font-size:15px;line-height:1;cursor:pointer;color:#333}
+.entStep button:hover:not(:disabled){background:#e3e8ee}
+.entStep button:disabled{opacity:.35;cursor:default}
+.entStep b{min-width:36px;text-align:center;font-size:12px;font-variant-numeric:tabular-nums}
+.entStep.part{border-color:#ef9f27}
+.entStep.full{border-color:#66bb6a;background:#eef7ee}
+.entTag{margin-left:4px;font-size:11px;padding:1px 6px;border-radius:999px}
+.entTag.part,.entPartial{background:#faeeda;color:#633806;border:1px solid #ef9f27}
+.entTag.full{background:#e3f2e3;color:#1b5e20;border:1px solid #66bb6a}
+.entPartial{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px}
+@media print{.entStep button{display:none}.entStep{border:none;background:none}}

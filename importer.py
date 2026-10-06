@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 
 UNASSIGNED_ROOM = "未割当"
-DINNER_TIMES = {"⑰": "17:30", "⑲": "19:30"}
+DINNER_TIMES = {"⑰": "17:30", "⑱": "18:30", "⑲": "19:30"}
 
 
 class CsvError(ValueError):
